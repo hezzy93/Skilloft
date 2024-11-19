@@ -10,6 +10,16 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"  # Set a default algorithm
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30  # Default expiration time if not set
 
+    # SMTP Settings for FastAPI-Mail
+    MAIL_USERNAME: str
+    MAIL_PASSWORD: str
+    MAIL_FROM: str
+    MAIL_PORT: int
+    MAIL_SERVER: str
+    MAIL_FROM_NAME: str = "Your App Name"
+    MAIL_STARTTLS: bool = True
+    MAIL_SSL_TLS: bool = False
+    USE_CREDENTIALS: bool = True
     class Config:
         env_file = ".env"  # Specify the .env file for loading environment variables
 
