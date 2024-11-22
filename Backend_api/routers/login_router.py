@@ -4,15 +4,15 @@ from schemas.login_schema import UserLogin, Token
 from services.login_services import authenticate_user
 from utils.login_utils import create_access_token, verify_token
 from database import get_db  # assume get_db provides a database session
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 login_router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/login/login")
 
 # Login Endpoint
 @login_router.post("/login", response_model=Token)
-def login(user: UserLogin, db: Session = Depends(get_db)):
-    db_user = authenticate_user(db, user.email, user.password)
+def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    db_user = authenticate_user(db, form_data.username, form_data.password)
     if not db_user:
         raise HTTPException(status_code=400, detail="Invalid credentials")
     

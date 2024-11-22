@@ -1,5 +1,6 @@
 import logging
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routers.signup import signup_router, user_router
 from routers.login_router import login_router
 from routers.password_reset_router import password_reset_router
@@ -14,7 +15,14 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allows all origins. Replace with specific domains if needed.
+    allow_credentials=True,
+    allow_methods=["*"],  # Allows all methods (GET, POST, PUT, DELETE, etc.)
+    allow_headers=["*"],  # Allows all headers
+)
 
 app.include_router(signup_router, prefix="/signup", tags=["Signup"])
 app.include_router(login_router, prefix="/login", tags=["Login"])
