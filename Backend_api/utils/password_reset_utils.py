@@ -23,13 +23,22 @@ def create_reset_token(email: str) -> str:
     to_encode = {"sub": email, "exp": expire}
     return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
 
-# Verify Reset Token
+# Verify Reset Token with Enhanced Error Handling
 def verify_reset_token(token: str) -> str:
     try:
+        # Attempt to decode the JWT token
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
-        return payload.get("sub")
+        email = payload.get("sub")
+        if email is None:
+            logger.warning("Token verification failed: missing email.")
+            raise HTTPException(status_code=400, detail="Invalid token: missing email information.")
+        return email
     except jwt.ExpiredSignatureError:
-        return None
+        logger.warning("Token verification failed: token expired.")
+        raise HTTPException(status_code=401, detail="The reset token has expired.")
+    except JWTError as e:
+        logger.error(f"Token verification error: {str(e)}")
+        raise HTTPException(status_code=400, detail="Invalid token.")
 
 # Send Reset Email using SMTP
 def send_reset_email(email: str, token: str):

@@ -11,8 +11,8 @@ def create_user(db: Session, user: signup_schema.UserCreate):
     hashed_password = hash_password(user.password)
     db_user = models.User(
         email=user.email,
-        last_name=user.last_name,
-        first_name=user.first_name,
+        last_name=None,  # Set last_name to None
+        first_name=None,  # Set last_name to None
         hashed_password=hashed_password
     )
     db.add(db_user)

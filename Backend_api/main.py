@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from routers.signup import signup_router, user_router
 from routers.login_router import login_router
 from routers.password_reset_router import password_reset_router
+from routers.others_router import others_router
 from database import SessionLocal,  engine, Base
 
 # Configure logging at the beginning of main.py
@@ -19,6 +20,7 @@ app.include_router(signup_router, prefix="/signup", tags=["Signup"])
 app.include_router(login_router, prefix="/login", tags=["Login"])
 app.include_router(user_router, prefix="/user", tags=["User"])
 app.include_router(password_reset_router, prefix="/auth", tags=["Authentication"])
+app.include_router(others_router, prefix="/others", tags=["Users"])
 
 @app.get("/")
 def read_root():
